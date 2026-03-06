@@ -3,19 +3,27 @@ import React, { useState } from "react";
 import { useTaskStore } from "./store";
 import { Link } from "react-router-dom";
 const Tasks = () => {
+  // zustand store
   const removeTask = useTaskStore((state) => state.removeTask);
   const tasks = useTaskStore((state) => state.tasks);
   const updateTask = useTaskStore((state) => state.updateTask);
   const toggleTask = useTaskStore((state) => state.toggleTask);
+
+  // editing states
   const [activeModalID, setActiveModalID] = useState(null);
   const [editingID, setEditingID] = useState(null);
 
-  // Filter Tasks
+  // Filter and search Tasks
   const [searchTerm, setSearchTerm] = useState("");
-
-  const searchResultTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const [filter, setFilter] = useState("all");
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "all") return true;
+    const categoryMatch = filter === "all" || task.category === filter;
+    const searchMatch = task.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return categoryMatch && searchMatch;
+  });
 
   const [editData, setEditData] = useState({
     title: "",
@@ -42,11 +50,15 @@ const Tasks = () => {
       editData.category,
       editData.startTime,
       editData.endTime,
+      editData.category,
     );
     setEditData({ title: "", startTime: "", endTime: "" });
     setEditingID(null);
   };
 
+  const cancelEditing = () => {
+    setEditingID(null);
+  };
   const handleModalOpen = (id) => {
     setActiveModalID(activeModalID === id ? null : id);
   };
@@ -65,24 +77,42 @@ const Tasks = () => {
     );
   return (
     <div className="max-w-6xl mx-auto px-2">
-      <div className="text-end bg-blue-200 rounded-full  mb-2 flex justify-start items-center relative">
-        <input
-          type="search"
-          name="search"
-          id="search"
-          placeholder="Search a task..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-white w-full rounded-full border border-blue-600"
-        />
-        <button className="absolute top-9.1 right-2">🔍</button>
+      <div className="text-end rounded-full  mb-2 flex justify-end gap-3 items-center ">
+        <div className="filters">
+          <select
+            name="filter"
+            id="filter"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="rounded-md px-5"
+          >
+            <option value="all">All Tasks</option>
+            <option value="coding">Coding</option>
+            <option value="team">Team</option>
+            <option value="personal">Private</option>
+          </select>
+        </div>
+        <div className="relative">
+          <input
+            type="search"
+            name="search"
+            id="search"
+            placeholder="Search a task..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-white w-full rounded-full border border-blue-600"
+          />
+          <button aria-label="Search" className="absolute top-2 right-2">
+            🔍
+          </button>
+        </div>
       </div>
-      {searchResultTasks.length === 0 ? (
+      {filteredTasks.length === 0 ? (
         <p className="text-gray-500 mb-5">
           No task found based on your search...
         </p>
       ) : (
-        searchResultTasks.map((task) => (
+        filteredTasks.map((task) => (
           <div key={task.id}>
             {editingID === task.id ? (
               <div className="absolute top-0 left-0 h-screen w-screen bg-white z-100 flex justify-center items-center p-5">
@@ -104,20 +134,28 @@ const Tasks = () => {
                   <input
                     type="text"
                     required
-                    name="title"
-                    id="title"
+                    name="description"
+                    id="description"
                     placeholder="Description (optional)..."
                     value={editData.description}
                     onChange={(e) =>
-                      setEditData({ ...editData, title: e.target.value })
+                      setEditData({ ...editData, description: e.target.value })
                     }
                     className="w-full mt-2"
                   />
-                  <select name="category" id="category" className="w-full mt-2">
+                  <select
+                    name="category"
+                    id="category"
+                    value={editData.category}
+                    onChange={(e) =>
+                      setEditData({ ...editData, category: e.target.value })
+                    }
+                    className="w-full mt-2"
+                  >
                     <option value="">Select category...</option>
-                    <option value="">Coding</option>
-                    <option value="">Academic</option>
-                    <option value="">Ordinary</option>
+                    <option value="coding">Coding</option>
+                    <option value="team">Team</option>
+                    <option value="personal">Personal</option>
                   </select>
 
                   <div className="flex gap-2 mt-2 mb-1 w-full">
@@ -149,7 +187,7 @@ const Tasks = () => {
                   <div className="flex gap-2 bg-gray-500 p-3 mt-5">
                     <button
                       type="submit"
-                      onClick={() => handleSave(task.id)}
+                      onClick={() => cancelEditing()}
                       className="w-full p-2 gray-200  bg-white text-black  rounded hover:border"
                     >
                       Cancel
@@ -175,7 +213,6 @@ const Tasks = () => {
                     <p className="text-gray-400 text-sm">
                       ⏱️{task.startTime} to {task.endTime}
                     </p>
-                    <p>{task.category}</p>
                     {/* <p className="text-sm text-gray-500">{task.date}</p> */}
                   </div>
                   <div className="flex gap-3 items-center relative">
@@ -233,8 +270,8 @@ const Tasks = () => {
       )}
 
       <Link
-        to={"/"}
-        className={`bg-blue-500 ${searchResultTasks.length === 0 ? "hidden" : ""} text-white p-1 flex items-center gap-2 justify-center`}
+        to={"/create"}
+        className={`bg-blue-500 ${filteredTasks.length === 0 ? "hidden" : ""} text-white p-1 flex items-center gap-2 justify-center`}
       >
         + <span>Add</span>
       </Link>
@@ -243,64 +280,3 @@ const Tasks = () => {
 };
 
 export default Tasks;
-
-// const Tasks = () => {
-//   const tasks = useTaskStore((state) => state.tasks);
-//   const updateTask = useTaskStore((state) => state.updateTask); // Hook up the store action
-//   const [editingID, setEditingID] = useState(null);
-
-//   // Temporary local state for the task being edited
-//   const [editData, setEditData] = useState({ title: "", startTime: "", endTime: "" });
-
-//   const startEditing = (task) => {
-//     setEditingID(task.id);
-//     setEditData({ title: task.title, startTime: task.startTime, endTime: task.endTime });
-//   };
-
-//   const saveEdit = (id) => {
-//     updateTask(id, editData.title, editData.startTime, editData.endTime);
-//     setEditingID(null);
-//   };
-
-//   return (
-//     <div className="max-w-6xl mx-auto">
-//       {tasks.map((task) => (
-//         <div key={task.id} className="...">
-//           {editingID === task.id ? (
-//             /* --- EDIT MODE UI --- */
-//             <div className="flex flex-col gap-2 w-full">
-//               <input
-//                 className="border p-1 font-bold"
-//                 value={editData.title}
-//                 onChange={(e) => setEditData({...editData, title: e.target.value})}
-//               />
-//               <div className="flex gap-2">
-//                 <input
-//                   type="time"
-//                   value={editData.startTime}
-//                   onChange={(e) => setEditData({...editData, startTime: e.target.value})}
-//                 />
-//                 <input
-//                   type="time"
-//                   value={editData.endTime}
-//                   onChange={(e) => setEditData({...editData, endTime: e.target.value})}
-//                 />
-//               </div>
-//               <button onClick={() => saveEdit(task.id)} className="bg-blue-500 text-white px-2 py-1 rounded">Save</button>
-//             </div>
-//           ) : (
-//             /* --- DISPLAY MODE UI (Your existing code) --- */
-//             <>
-//               <div>
-//                 <h2 className="text-xl font-bold">{task.title}</h2>
-//                 <p className="text-gray-600">{task.startTime} to {task.endTime}</p>
-//               </div>
-//               {/* ... your existing menu buttons ... */}
-//               <button onClick={() => startEditing(task)}>edit</button>
-//             </>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };

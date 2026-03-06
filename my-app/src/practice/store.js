@@ -22,10 +22,12 @@ export const useTaskStore = create(
           tasks: state.tasks.filter((task) => task.id !== taskID),
         })),
 
-      updateTask: (taskId, title, startTime, endTime) =>
+      updateTask: (taskId, title, startTime, endTime, category) =>
         set((state) => ({
           tasks: state.tasks.map((task) =>
-            task.id === taskId ? { ...task, title, startTime, endTime } : task,
+            task.id === taskId
+              ? { ...task, title, startTime, endTime, category }
+              : task,
           ),
         })),
     }),

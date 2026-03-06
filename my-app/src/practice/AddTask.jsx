@@ -57,9 +57,10 @@ const TaskInput = () => {
           className="w-full mt-2"
         >
           <option value="">Please select category</option>
-          <option value="todo">To do</option>
-          <option value="task">Task</option>
-          <option value="study">Study</option>
+          <option value="all">All</option>
+          <option value="coding">Coding</option>
+          <option value="team">Team</option>
+          <option value="personal">Private</option>
         </select>
 
         <div className="flex gap-2 mt-2 mb-1 w-full">
@@ -93,7 +94,7 @@ const TaskInput = () => {
         </button>
       </form>
       <div className="text-center w-full mt-5">
-        <Link to={"/tasks"}>See tasks</Link>
+        <Link to={"/"}>See tasks</Link>
       </div>
     </div>
   );

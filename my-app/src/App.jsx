@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Practice from "./practice";
 import TaskInput from "./practice/AddTask";
 import Tasks from "./practice/Tasks";
 const App = () => {
@@ -14,8 +15,9 @@ const App = () => {
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<TaskInput />} />
-          <Route path="/Tasks" element={<Tasks />} />
+          {/* <Route path="/" element={<Practice />} /> */}
+          <Route path="/create" element={<TaskInput />} />
+          <Route path="/" element={<Tasks />} />
         </Routes>
       </BrowserRouter>
     </div>
