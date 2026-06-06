@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Practice from "./practice";
 import TaskInput from "./practice/AddTask";
 import Tasks from "./practice/Tasks";
 const App = () => {
