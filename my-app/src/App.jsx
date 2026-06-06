@@ -6,7 +6,7 @@ const App = () => {
   return (
     <div>
       <h2 className="mt-5 text-2xl text-center text-blue-500 font-bold">
-        Plan your day!
+        Manage your plans and tasks!
       </h2>
       <p className="text-center text-gray-400 mb-5">
         Add tasks and manage your schedule
