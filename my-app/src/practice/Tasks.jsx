@@ -234,28 +234,28 @@ const Tasks = () => {
                       className={`absolute top-0 right-5 cursor-pointer bg-white border border-gray-300 rounded w-40 flex flex-col items-start z-10  ${activeModalID === task.id ? "" : "hidden"}`}
                     >
                       <button
-                        onClick={() => startEditing(task)}
+                        onClick={() => {startEditing(task); handleModalOpen(task.id)}}
                         className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1"
                       >
                         edit
                       </button>
                       <button
-                        onClick={() => toggleTask(task.id)}
+                        onClick={() => {toggleTask(task.id); handleModalOpen(task.id)}}
                         className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1"
                       >
                         {task.completed ? "Unfinish" : "Finish"}
                       </button>
-                      <button className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1">
+                      <button onClick={() => handleModalOpen(task.id)}  className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1">
                         copy
                       </button>
-                      <button className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1">
+                      <button onClick={() => handleModalOpen(task.id)} className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1">
                         save
                       </button>
-                      <button className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1">
+                      <button onClick={() => handleModalOpen(task.id)} className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1">
                         move to trash
                       </button>
                       <button
-                        onClick={() => removeTask(task.id)}
+                        onClick={() => {removeTask(task.id); handleModalOpen(task.id)}}
                         className="border-b w-full text-start border-gray-200 font-semibold hover:text-gray-500 pb-1 pl-1"
                       >
                         delete
