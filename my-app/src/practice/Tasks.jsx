@@ -68,7 +68,7 @@ const Tasks = () => {
       <div className="text-center">
         <p className="mb-5">You don't have any task yet...</p>
         <Link
-          to={"/"}
+          to={"/create"}
           className="bg-blue-500 text-white px-5 py-2 ml-2 rounded "
         >
           Create one
