@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useTaskStore } from "./store";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const TaskInput = () => {
+  const navigate = useNavigate()
   const addTask = useTaskStore((state) => state.addTask);
 
   const [formData, setFormData] = useState({
@@ -20,6 +21,8 @@ const TaskInput = () => {
     };
     addTask(newTask);
     setFormData({ title: "", startTime: "", endTime: "", category: "" });
+
+    navigate("/")
   };
 
   const handleChange = (e) => {
