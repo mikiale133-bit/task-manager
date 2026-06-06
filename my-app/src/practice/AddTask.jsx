@@ -46,7 +46,6 @@ const TaskInput = () => {
         />
         <input
           type="text"
-          required
           name="title"
           id="title"
           placeholder="Description (optional)..."
@@ -60,10 +59,10 @@ const TaskInput = () => {
           className="w-full mt-2"
         >
           <option value="">Please select category</option>
-          <option value="all">All</option>
           <option value="coding">Coding</option>
           <option value="team">Team</option>
           <option value="personal">Private</option>
+          <option value="all">others</option>
         </select>
 
         <div className="flex gap-2 mt-2 mb-1 w-full">
